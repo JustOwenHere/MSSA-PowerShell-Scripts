@@ -10,4 +10,4 @@ Function CaseSwapper {
     return $changedWord
 }
 
-CaseSwapper -inputString "bIG ChuNgus"
+CaseSwapper -inputString "tHis is THE stRinG to bE chaNged"
