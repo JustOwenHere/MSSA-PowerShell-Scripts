@@ -1,0 +1,13 @@
+Function CaseSwapper {
+    Param ([string]$inputString)
+    $changedWord = ''
+    foreach ($char in $inputString.ToCharArray()) {
+        if ($char -cmatch "[a-z]") {$newChar = $char.ToString().ToUpper()}      #This changes any lowercase characters to upper case.
+        elseif ($char -cmatch "[A-Z]") {$newChar = $char.ToString().ToLower()}  #This changes any uppercase characters to lower case.
+        else {$newChar = $char}
+        $changedWord = $changedWord + $newChar                                  #This rebuilds the input word case from each changed character.
+    }
+    return $changedWord
+}
+
+CaseSwapper -inputString "bIG ChuNgus"
