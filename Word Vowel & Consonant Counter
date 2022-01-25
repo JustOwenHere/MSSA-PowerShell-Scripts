@@ -1,0 +1,16 @@
+#Takes a single word, counts the vowels and consonants, then displays each separate amount in the terminal.
+function CountWordVsAndCs {
+param ([string]$Word)
+
+#Defined variable data to be used in the script.
+$vowels = 0
+$consonants = 0
+$vowelsArray = '[aeiou]'
+$consonantsArray = '[bcdfghjklmnpqrstvwxyz]'
+     
+     foreach ($char in $Word.ToCharArray()) { #Transfers all characters in a given word to an array.
+        if ($char -match  $vowelsArray) {$vowels++} #If characters match any vowels defined in the variable, count the amount and save it.
+        elseif ($char -match $consonantsArray) {$consonants++} #If the characters match any of the consonants defined in the varible, count the amount and save it.
+     }
+     return "Vowels = $vowels, Consonants = $consonants" #Displays the saved vowels/consonants in the terminal.
+}
