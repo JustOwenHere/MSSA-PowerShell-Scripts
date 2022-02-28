@@ -5,12 +5,27 @@
     Function Import-NewHires {$userInfo = Import-Csv E:\NewHires.csv}
 } | Import-Module #>
 
-[cmdletBinding()]
-Param ($CSVPath = 'E:\NewHires.csv')
-$Users = Import-Csv -Path $CSVPath
-$UserCount = $Users.count
+Function Import-NewUsers {
 
-foreach ($User in $Users) {
+    [cmdletBinding()]
+    Param ($CSVPath = 'E:\NewHires.csv')
+    $Users = Import-Csv -Path $CSVPath
+    $Departments = $Users.department | Select-Object -Unique
+    $CheckOUNames = (Get-ADOrganizationalUnit -Filter *)
+    $CheckGroupNames = (Get-ADGroup -Filter *)
+    foreach ($Department in $Departments) {
+        if ($Department -notin $CheckOUNames) {
+            New-ADOrganizationalUnit -Name $Department -Path 'dc=adatum,dc=com'
+        }
+        if ($Department -notin $CheckGroupNames) {
+            New-ADGroup -GroupScope Global -Name $Department -Path "ou=$Department,dc=adatum,dc=com"
+        }
+    }
+    
+    
+    $UserCount = $Users.count
+
+    foreach ($User in $Users) {
     $Username = $User.firstname + ' ' + $User.lastname
 
     $ADUser = Get-ADUser -Filter *
@@ -28,4 +43,8 @@ foreach ($User in $Users) {
             AccountPassword = $User.password
             Office = $User.officename
         }
+        New-ADUser @userParameters
+        $NewUser = Get-ADUser -Identity $SamAccountName
+        Add-ADGroupMember -Identity $User.department -Members $NewUser
+    }
 }
