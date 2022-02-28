@@ -5,9 +5,11 @@
     Function Import-NewHires {$userInfo = Import-Csv E:\NewHires.csv}
 } | Import-Module #>
 
-Function Import-NewHires {
-    Param ([string[]]$ImportUserData)
-    $Users = Import-Csv -Path E:\NewHires.csv
+[cmdletBinding()]
+Param ($CSVPath = 'E:\NewHires.csv')
+$Users = Import-Csv -Path $CSVPath
+
+
 
     foreach ($User in $Users) {
         $Username = "$($User.'Firstname').$($User.'Lastname')"
@@ -16,41 +18,15 @@ Function Import-NewHires {
 
 
             $userParameters = @{
-                $FirstName = $User.FirstName
-                $LastName = $User.LastName
-                $UPN = $User.UPN
-                $Department = $User.Department
-                $Address = $User.StreetAddress
-                $City = $User.City
-                $MobileNum = $User.Mobilephone
-                $UserPassword = $User.Password
-                $Office = $User.OfficeName
+                GivenName = $User.firstName
+                Surname = $User.lastName
+                UserPrincipalName = $User.upn
+                SamAccountName = $SamAccountName
+                Department = $User.Department
+                StreetAddress = $User.streetaddress
+                City = $User.city
+                MobilePhone = $User.mobilephone
+                AccountPassword = $User.password
+                Office = $User.officename
             }
     }
-
-}
-
-function CheckOU {
-    param (
-        OptionalParameters
-    )
-}
-
-
-<# $UserName = 
-$FirstName =
-$LastName =
-$UPN = 
-$Department =
-$StreetAddress =
-$City =
-$MobileNum =
-$OfficeName =
-$Password =
-
-$Domain = ""
-$UserOU = "DC=adatum,DC=com," #>
-
-$test = Get-ADUser -Filter * -SearchBase "DC=adatum,dc=com"
-$test | set-adus
-$test
