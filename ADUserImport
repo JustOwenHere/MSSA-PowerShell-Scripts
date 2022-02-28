@@ -8,25 +8,24 @@
 [cmdletBinding()]
 Param ($CSVPath = 'E:\NewHires.csv')
 $Users = Import-Csv -Path $CSVPath
+$UserCount = $Users.count
 
+foreach ($User in $Users) {
+    $Username = $User.firstname + ' ' + $User.lastname
 
+    $ADUser = Get-ADUser -Filter *
 
-    foreach ($User in $Users) {
-        $Username = "$($User.'Firstname').$($User.'Lastname')"
-
-        $ADUser = Get-ADUser -Filter *
-
-
-            $userParameters = @{
-                GivenName = $User.firstName
-                Surname = $User.lastName
-                UserPrincipalName = $User.upn
-                SamAccountName = $SamAccountName
-                Department = $User.Department
-                StreetAddress = $User.streetaddress
-                City = $User.city
-                MobilePhone = $User.mobilephone
-                AccountPassword = $User.password
-                Office = $User.officename
-            }
-    }
+        #Implement splatting for the parameters to be used in New-ADUser.
+        $userParameters = @{
+            GivenName = $User.firstName
+            Surname = $User.lastName
+            UserPrincipalName = $User.upn
+            SamAccountName = $SamAccountName
+            Department = $User.Department
+            StreetAddress = $User.streetaddress
+            City = $User.city
+            MobilePhone = $User.mobilephone
+            AccountPassword = $User.password
+            Office = $User.officename
+        }
+}
